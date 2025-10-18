@@ -62,6 +62,7 @@ Level parse_level_name(const std::string &name, bool &ok) {
 } // namespace
 
 void set_level(Level level) {
+  log(Level::Debug, "Setting log level to " + std::string(to_cstr(level)));
   g_level.store(static_cast<int>(level), std::memory_order_relaxed);
 }
 
@@ -70,6 +71,7 @@ Level get_level() {
 }
 
 bool set_level(const std::string &name) {
+  log(Level::Debug, "Setting log level to " + name);
   bool ok = false;
   Level level = parse_level_name(name, ok);
   if (ok) {

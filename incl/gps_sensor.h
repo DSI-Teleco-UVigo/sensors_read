@@ -4,6 +4,7 @@
 
 #include <limits>
 #include <memory>
+#include <string>
 #include <vector>
 
 struct GpsReading {
@@ -23,6 +24,7 @@ struct GpsReading {
 class GpsSensor {
 public:
   GpsSensor();
+  ~GpsSensor();
 
   bool available() const;
   GpsReading read();
@@ -32,4 +34,4 @@ private:
   GpsReading state_;
 };
 
-void print_gps(const GpsReading &state);
+std::string format_gps(const GpsReading &state, const std::string &timestamp);

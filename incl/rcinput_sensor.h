@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <vector>
 
 class RCInput;
@@ -18,4 +19,4 @@ private:
   std::unique_ptr<RCInput> rc_;
 };
 
-void print_rcinput(const std::vector<int> &values);
+std::string format_rcinput(const std::vector<int> &values, const std::string &timestamp);

@@ -3,6 +3,7 @@
 #include <Common/MS5611.h>
 
 #include <limits>
+#include <string>
 
 struct BarometerReading {
   bool valid = false;
@@ -13,6 +14,7 @@ struct BarometerReading {
 class BarometerSensor {
 public:
   BarometerSensor();
+  ~BarometerSensor();
 
   bool available() const;
   BarometerReading read();
@@ -22,4 +24,4 @@ private:
   MS5611 barometer_;
 };
 
-void print_barometer(const BarometerReading &reading);
+std::string format_barometer(const BarometerReading &reading, const std::string &timestamp);

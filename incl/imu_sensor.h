@@ -34,4 +34,4 @@ private:
   std::unique_ptr<InertialSensor> sensor_;
 };
 
-void print_imu(const std::string &name, const ImuReading &data);
+std::string format_imu(const std::string &name, const ImuReading &data, const std::string &timestamp);

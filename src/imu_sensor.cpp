@@ -9,7 +9,8 @@
 #include <unistd.h>
 
 #include <cmath>
-#include <cstdio>
+#include <iomanip>
+#include <sstream>
 
 namespace {
 
@@ -53,40 +54,43 @@ ImuSensor::ImuSensor(ImuType type) {
   usleep(100000);
 }
 
-ImuSensor::~ImuSensor() = default;
+ImuSensor::~ImuSensor() {
+  logging::log(logging::Level::Info, std::string("Closing IMU ") + name_);
+}
 
 bool ImuSensor::available() const { return static_cast<bool>(sensor_); }
 
 const std::string &ImuSensor::name() const { return name_; }
 
 ImuReading ImuSensor::read() {
+  logging::log(logging::Level::Debug, std::string("Reading IMU ") + name_);
   ImuReading result;
   if (!sensor_) {
+    logging::log(logging::Level::Warning, std::string("IMU not available: ") + name_);
     return result;
   }
   sensor_->update();
   sensor_->read_accelerometer(&result.ax, &result.ay, &result.az);
+  logging::log(logging::Level::Debug, name_ + " Accel: " + std::to_string(result.ax) + " " + std::to_string(result.ay) + " " + std::to_string(result.az));
   sensor_->read_gyroscope(&result.gx_rad, &result.gy_rad, &result.gz_rad);
+  logging::log(logging::Level::Debug, name_ + " Gyro: " + std::to_string(result.gx_rad) + " " + std::to_string(result.gy_rad) + " " + std::to_string(result.gz_rad));
   sensor_->read_magnetometer(&result.mx, &result.my, &result.mz);
+  logging::log(logging::Level::Debug, name_ + " Mag: " + std::to_string(result.mx) + " " + std::to_string(result.my) + " " + std::to_string(result.mz));
   result.valid = true;
   return result;
 }
 
-void print_imu(const std::string &name, const ImuReading &data) {
+std::string format_imu(const std::string &name, const ImuReading &data, const std::string &timestamp) {
   if (!data.valid) {
     if (name.empty()) {
-      std::printf("IMU: unavailable\n");
-    } else {
-      std::printf("IMU %s: unavailable\n", name.c_str());
+      return "IMU: unavailable";
     }
-    return;
+    return std::string("IMU ") + name + ": unavailable";
   }
-  const double gx_deg = data.gx_rad * 180.0 / kPi;
-  const double gy_deg = data.gy_rad * 180.0 / kPi;
-  const double gz_deg = data.gz_rad * 180.0 / kPi;
-  std::printf("IMU %s | Acc: %+7.3f %+7.3f %+7.3f m/s^2 | Gyro: %+8.3f %+8.3f "
-              "%+8.3f deg/s | "
-              "Mag: %+7.3f %+7.3f %+7.3f uT\n",
-              name.empty() ? "IMU" : name.c_str(), data.ax, data.ay, data.az,
-              gx_deg, gy_deg, gz_deg, data.mx, data.my, data.mz);
+  std::ostringstream out;
+  out << "timestamp=" << timestamp << " name=" << name
+      << " ax=" << data.ax << " ay=" << data.ay << " az=" << data.az
+      << " gx=" << data.gx_rad << " gy=" << data.gy_rad << " gz=" << data.gz_rad
+      << " mx=" << data.mx << " my=" << data.my << " mz=" << data.mz;
+  return out.str();
 }

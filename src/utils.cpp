@@ -16,6 +16,7 @@ void print_usage(const char *prog) {
             << "  --interval <seconds>     Sampling interval (default: 1.0)\n"
             << "  --rc-channels <count>    Number of RC channels (default: 4)\n"
             << "  --once                   Read sensors only once\n"
+
             << "  --log-level <level>      Log verbosity "
                "(DEBUG/INFO/WARNING/ERROR/CRITICAL)\n"
             << "  --help                   Show this message\n";
@@ -23,6 +24,7 @@ void print_usage(const char *prog) {
 
 bool parse_options(int argc, char *argv[], ProgramOptions &opts,
                    bool &show_help) {
+  logging::log(logging::Level::Debug, "Parsing options");
   show_help = false;
   const char *short_opts = "t:c:ol:h";
   const struct option long_opts[] = {
@@ -50,6 +52,7 @@ bool parse_options(int argc, char *argv[], ProgramOptions &opts,
         return false;
       }
       opts.interval = value;
+      logging::log(logging::Level::Debug, "Interval set to " + std::to_string(value));
       break;
     }
 
@@ -66,11 +69,13 @@ bool parse_options(int argc, char *argv[], ProgramOptions &opts,
         return false;
       }
       opts.rc_channels = static_cast<int>(value);
+      logging::log(logging::Level::Debug, "RC channels set to " + std::to_string(value));
       break;
     }
 
     case 'o':
       opts.once = true;
+      logging::log(logging::Level::Debug, "Once option set to true");
       break;
 
     case 'l':
@@ -78,6 +83,7 @@ bool parse_options(int argc, char *argv[], ProgramOptions &opts,
         logging::log(logging::Level::Error, "Invalid log level");
         return false;
       }
+      logging::log(logging::Level::Debug, "Log level set");
       break;
 
     case 'h':
@@ -91,15 +97,16 @@ bool parse_options(int argc, char *argv[], ProgramOptions &opts,
     }
   }
 
+  logging::log(logging::Level::Debug, "Finished parsing options");
   return true;
 }
 
 std::string current_timestamp() {
+  logging::log(logging::Level::Debug, "Getting current timestamp");
   std::time_t now = std::time(nullptr);
-  char buffer[64];
-  std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S",
-                std::localtime(&now));
-  return std::string(buffer);
+  std::string timestamp = std::to_string(static_cast<long long>(now));
+  logging::log(logging::Level::Debug, "Timestamp: " + timestamp);
+  return timestamp;
 }
 
 } // namespace utils

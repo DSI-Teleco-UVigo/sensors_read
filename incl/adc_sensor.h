@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <vector>
 
 class ADC;
@@ -17,4 +18,4 @@ private:
   std::unique_ptr<ADC> adc_;
 };
 
-void print_adc(const std::vector<double> &values);
+std::string format_adc(const std::vector<double> &values, const std::string &timestamp);

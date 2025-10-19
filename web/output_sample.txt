@@ -1,0 +1,7 @@
+===== Sensor Readings at 1760905959 =====
+IMU/MPU9250: ax=-0.0670376 ay=0.105345 az=9.8689 gx=-0.0127707 gy=0.00957802 gz=0.00212845 mx=3.95742 my=22.3781 mz=42.8098 name=MPU9250 timestamp=1760905958 
+IMU/LSM9DS1: ax=0.00717847 ay=0.18664 az=9.734 gx=0.0464257 gy=-0.00977384 gz=0.0647517 mx=-1.682 my=0.348 mz=54.984 name=LSM9DS1 timestamp=1760905958 
+ADC: a0=4.704 a1=0 a2=0.016 a3=0.016 a4=0 a5=0.378 timestamp=1760905958 
+Barometer: pressure=1008.43 temperature=33.1511 timestamp=1760905958 
+GPS: fix_type=0 height=0 lat=0 lon=0 timestamp=1760905958 
+RCInput: pitch=0 roll=0 throttle=0 timestamp=1760905958 yaw=0 

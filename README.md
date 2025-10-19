@@ -27,6 +27,11 @@ Key options:
 - Opens a Zenoh session, subscribes to `telemetry/sensors/**`, and renders the latest values from every sensor in a simple terminal dashboard.
 - Useful for verifying end-to-end publishing without additional tooling. The program runs until interrupted.
 
+### Web dashboard
+- Located under `web/` and provides a browser-based chart for the IMU acceleration stream alongside the latest sensor snapshot.
+- Requires the `sensors_read_test` binary at `build/sensors_read_test`; if the binary is missing the server replays `web/output_sample.txt` as a fallback.
+- Run the dashboard backend from the `web/` directory with `/usr/bin/node server.js`, then open `http://127.0.0.1:3000` in a browser to view the live feed.
+
 ## Zenoh Topics
 
 All samples share the `telemetry/sensors` base. Individual measurements are routed to:

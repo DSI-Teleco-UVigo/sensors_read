@@ -56,8 +56,6 @@ int main(int argc, char *argv[]) {
     }
   };
 
-  const double interval_s = options.interval < 0.1 ? 0.1 : options.interval;
-
   logging::log(logging::Level::Info, "Starting main loop");
   do {
     const std::string timestamp = utils::current_timestamp();
@@ -93,8 +91,8 @@ int main(int argc, char *argv[]) {
     logging::log(logging::Level::Debug, "RCInput payload: " + rc_payload);
     publish_or_warn(main_const::rc_topic, rc_payload);
 
-    logging::log(logging::Level::Debug, "Sleeping for " + std::to_string(interval_s) + "s");
-    const unsigned int sleep_usecs = static_cast<unsigned int>(interval_s * 1000000.0);
+    logging::log(logging::Level::Debug, "Sleeping for " + std::to_string(options.interval) + "s");
+    const unsigned int sleep_usecs = static_cast<unsigned int>(options.interval * 1000000.0);
     usleep(sleep_usecs);
   } while (!options.once);
 

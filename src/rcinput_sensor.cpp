@@ -1,13 +1,54 @@
 #include "rcinput_sensor.h"
 
+#include "logging.h"
+
 #include <Common/Util.h>
 #include <Navio2/RCInput_Navio2.h>
 
-#include <iomanip>
+#include <array>
+#include <cmath>
 #include <sstream>
 
 namespace {
 constexpr int kReadFailed = -1;
+constexpr double kPwmMin = 1000.0;
+constexpr double kPwmMax = 2000.0;
+constexpr double kPwmRange = kPwmMax - kPwmMin;
+
+struct AxisMapping {
+  const char *name;
+  std::size_t channel;
+};
+
+constexpr std::array<AxisMapping, 4> kAxes = {{
+    {"roll", 0},
+    {"pitch", 1},
+    {"throttle", 2},
+    {"yaw", 3},
+}};
+
+int normalize_pwm(int raw_value) {
+  if (raw_value <= 0) {
+    return 0;
+  }
+  if (raw_value <= kPwmMin) {
+    return 0;
+  }
+  if (raw_value >= kPwmMax) {
+    return 100;
+  }
+  const double normalized = ((static_cast<double>(raw_value) - kPwmMin) / kPwmRange) * 100.0;
+  return static_cast<int>(std::lround(normalized));
+}
+
+int normalized_axis_value(const std::vector<int> &values, std::size_t channel) {
+  if (channel >= values.size()) {
+    logging::log(logging::Level::Warning,
+                 "RCInput channel " + std::to_string(channel) + " not available for normalization");
+    return 0;
+  }
+  return normalize_pwm(values[channel]);
+}
 } // namespace
 
 #include "logging.h"
@@ -58,8 +99,9 @@ std::string format_rcinput(const std::vector<int> &values, const std::string &ti
   }
   std::ostringstream out;
   out << "timestamp=" << timestamp;
-  for (std::size_t idx = 0; idx < values.size(); ++idx) {
-    out << " c" << idx << "=" << values[idx];
+  for (const auto &axis : kAxes) {
+    const int normalized_value = normalized_axis_value(values, axis.channel);
+    out << " " << axis.name << "=" << normalized_value;
   }
   return out.str();
 }

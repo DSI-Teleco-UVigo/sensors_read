@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sensor Readings</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Sensor Readings</h1>
+        <p id="status">Connecting…</p>
+      </header>
+
+      <section class="charts">
+        <article class="chart-card">
+          <header class="chart-card__header">
+            <h2>IMU Sensors</h2>
+            <span class="chart-card__subtitle">Acceleration axes for MPU9250 and LSM9DS1</span>
+          </header>
+          <canvas id="imuChart" aria-label="IMU sensor readings"></canvas>
+        </article>
+
+        <article class="chart-card">
+          <header class="chart-card__header">
+            <h2>RCInput</h2>
+            <span class="chart-card__subtitle">Roll, pitch, throttle, yaw</span>
+          </header>
+          <canvas id="rcChart" aria-label="RCInput readings"></canvas>
+        </article>
+
+        <article class="chart-card">
+          <header class="chart-card__header">
+            <h2>GPS</h2>
+            <span class="chart-card__subtitle">Latitude, longitude, and height</span>
+          </header>
+          <canvas id="gpsChart" aria-label="GPS readings"></canvas>
+        </article>
+
+        <article class="chart-card">
+          <header class="chart-card__header">
+            <h2>Environment</h2>
+            <span class="chart-card__subtitle">Barometer and ADC channels</span>
+          </header>
+          <canvas id="envChart" aria-label="Barometer and ADC readings"></canvas>
+        </article>
+      </section>
+
+      <section class="latest-wrapper">
+        <h2>Latest Snapshot</h2>
+        <div id="latestMeta"></div>
+        <pre id="latestValues"></pre>
+      </section>
+    </main>
+
+    <script type="module" src="/client.js"></script>
+  </body>
+</html>
